@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/browser';
+
 interface TextHistoryEntry {
   id: string;
   text: string;
@@ -277,7 +279,6 @@ chrome.runtime.onMessage.addListener(function (
 });
 
 chrome.runtime.onInstalled.addListener(function () {
-  // Sync preferences
   chrome.storage.sync.get(['preferences'], function (result) {
     const syncedPreferences: UserPreferences | undefined = result.preferences;
     if (syncedPreferences) {
@@ -287,7 +288,6 @@ chrome.runtime.onInstalled.addListener(function () {
       syncPreferences(preferences); 
     }
   });
-
   chrome.storage.sync.get(['history'], function (result) {
     const syncedHistory: TextHistoryEntry[] | undefined = result.history;
     if (syncedHistory) {
@@ -298,4 +298,17 @@ chrome.runtime.onInstalled.addListener(function () {
     }
   });
 });
+
+
+Sentry.init({
+  dsn: 'YOUR_SENTRY_DSN',
+});
+function handleError(error: any): void {
+  console.error('An error occurred:', error);
+  Sentry.captureException(error);
+}
+
+function handleWarning(warning: any): void {
+  console.warn('A warning occurred:', warning);
+}
 
