@@ -1,3 +1,41 @@
+interface TextHistoryEntry {
+  id: string;
+  text: string;
+  timestamp: number;
+}
+
+function getHistory(callback: (history: TextHistoryEntry[]) => void): void {
+  chrome.storage.local.get(['history'], function (result) {
+    const history: TextHistoryEntry[] = result.history || [];
+    callback(history);
+  });
+}
+
+function saveToHistory(text: string): void {
+  getHistory(function (history) {
+    const id = Date.now().toString();
+    const entry: TextHistoryEntry = {
+      id,
+      text,
+      timestamp: Date.now(),
+    };
+    history.push(entry);
+    chrome.storage.local.set({ history });
+  });
+}
+
+function removeFromHistory(id: string): void {
+  getHistory(function (history) {
+    const updatedHistory = history.filter((entry) => entry.id !== id);
+    chrome.storage.local.set({ history: updatedHistory });
+  });
+}
+
+
+function clearHistory(): void {
+  chrome.storage.local.remove(['history']);
+}
+
 function translateText(text: string): void {
   const translationAPIKey = 'YOUR_TRANSLATION_API_KEY';
   const translateEndpoint = `https://translation-api.com/api/v1/translate?key=${translationAPIKey}&text=${encodeURIComponent(
@@ -69,7 +107,125 @@ chrome.runtime.onMessage.addListener(function (
       console.error('Platform not specified for share action');
     }
   }
+
+  saveToHistory(text);
 });
+
+chrome.commands.onCommand.addListener(function (command) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+interface TextHistoryEntry {
+  id: string;
+  text: string;
+  timestamp: number;
+}
+
+function getHistory(callback: (history: TextHistoryEntry[]) => void): void {
+  chrome.storage.local.get(['history'], function (result) {
+    const history: TextHistoryEntry[] = result.history || [];
+    callback(history);
+  });
+}
+
+function saveToHistory(text: string): void {
+  getHistory(function (history) {
+    const id = Date.now().toString();
+    const entry: TextHistoryEntry = {
+      id,
+      text,
+      timestamp: Date.now(),
+    };
+    history.push(entry);
+    chrome.storage.local.set({ history });
+  });
+}
+
+function removeFromHistory(id: string): void {
+  getHistory(function (history) {
+    const updatedHistory = history.filter((entry) => entry.id !== id);
+    chrome.storage.local.set({ history: updatedHistory });
+  });
+}
+
+
+function clearHistory(): void {
+  chrome.storage.local.remove(['history']);
+}
+
+function translateText(text: string): void {
+  const translationAPIKey = 'YOUR_TRANSLATION_API_KEY';
+  const translateEndpoint = `https://translation-api.com/api/v1/translate?key=${translationAPIKey}&text=${encodeURIComponent(
+    text
+  )}&target=TARGET_LANGUAGE_CODE`;
+
+  fetch(translateEndpoint)
+    .then((response) => response.json())
+    .then((data) => {
+      const translatedText = data.translation;
+      console.log(`Translation: ${translatedText}`);
+    })
+    .catch((error) => {
+      console.error('Translation error:', error);
+    });
+}
+
+function searchOnPlatform(text: string, platform: string): void {
+  switch (platform) {
+    case 'Reddit':
+      console.log(`Search on Reddit: ${text}`);
+      break;
+    case 'Twitter':
+      console.log(`Search on Twitter: ${text}`);
+      break;
+    case 'Facebook':
+      console.log(`Search on Facebook: ${text}`);
+      break;
+    default:
+      console.log(`Unsupported platform: ${platform}`);
+  }
+}
+
+function shareOnPlatform(text: string, platform: string): void {
+  switch (platform) {
+    case 'Twitter':
+      console.log(`Share on Twitter: ${text}`);
+      break;
+    case 'Facebook':
+      console.log(`Share on Facebook: ${text}`);
+      break;
+    case 'LinkedIn':
+      console.log(`Share on LinkedIn: ${text}`);
+      break;
+    default:
+      console.log(`Unsupported platform: ${platform}`);
+  }
+}
+
+chrome.runtime.onMessage.addListener(function (
+  request: { action: string; text: string; platform?: string },
+  sender,
+  sendResponse
+) {
+  const { action, text, platform } = request;
+
+  if (action === 'translate') {
+    translateText(text);
+  } else if (action === 'search') {
+    if (platform) {
+      searchOnPlatform(text, platform);
+    } else {
+      console.error('Platform not specified for search action');
+    }
+  } else if (action === 'share') {
+    if (platform) {
+      shareOnPlatform(text, platform);
+    } else {
+      console.error('Platform not specified for share action');
+    }
+  }
+
+  saveToHistory(text);
+});
+
 
 chrome.commands.onCommand.addListener(function (command) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -77,4 +233,17 @@ chrome.commands.onCommand.addListener(function (command) {
     chrome.tabs.sendMessage(activeTab.id!, { action: command });
   });
 });
+
+chrome.runtime.onMessage.addListener(function (
+  request: { action: string; id?: string },
+  sender,
+  sendResponse
+) {
+  if (request.action === 'removeFromHistory' && request.id) {
+    removeFromHistory(request.id);
+  } else if (request.action === 'clearHistory') {
+    clearHistory();
+  }
+});
+
 
