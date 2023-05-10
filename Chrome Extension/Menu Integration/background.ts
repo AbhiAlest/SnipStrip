@@ -247,3 +247,55 @@ chrome.runtime.onMessage.addListener(function (
 });
 
 
+function syncPreferences(preferences: UserPreferences): void {
+  chrome.storage.sync.set({ preferences }, function () {
+    console.log('Preferences synced successfully');
+  });
+}
+
+function syncHistory(history: TextHistoryEntry[]): void {
+  chrome.storage.sync.set({ history }, function () {
+    console.log('History synced successfully');
+  });
+}
+
+chrome.runtime.onMessage.addListener(function (
+  request: { action: string; id?: string; preferences?: UserPreferences },
+  sender,
+  sendResponse
+) {
+  if (request.action === 'removeFromHistory' && request.id) {
+    removeFromHistory(request.id);
+    syncHistory(history); // Sync history after removing an entry
+  } else if (request.action === 'clearHistory') {
+    clearHistory();
+    syncHistory(history); // Sync history after clearing all entries
+  } else if (request.action === 'updatePreferences' && request.preferences) {
+    preferences = request.preferences;
+    syncPreferences(preferences); 
+  }
+});
+
+chrome.runtime.onInstalled.addListener(function () {
+  // Sync preferences
+  chrome.storage.sync.get(['preferences'], function (result) {
+    const syncedPreferences: UserPreferences | undefined = result.preferences;
+    if (syncedPreferences) {
+      preferences = syncedPreferences;
+      console.log('Preferences synced on install/update');
+    } else {
+      syncPreferences(preferences); 
+    }
+  });
+
+  chrome.storage.sync.get(['history'], function (result) {
+    const syncedHistory: TextHistoryEntry[] | undefined = result.history;
+    if (syncedHistory) {
+      history = syncedHistory;
+      console.log('History synced on install/update');
+    } else {
+      syncHistory(history); 
+    }
+  });
+});
+
