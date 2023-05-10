@@ -1,11 +1,12 @@
 {
   "manifest_version": 2,
-  "name": "YouTube Text Highlighter",
+  "name": "SnipStrip",
   "version": "1.0",
   "description": "Allows users to highlight or copy text from YouTube videos.",
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "background": {
     "scripts": ["background.js"],
@@ -24,5 +25,28 @@
       "128": "icon128.png"
     },
     "default_popup": "settings.html"
+  },
+  "commands": {
+    "translate-action": {
+      "suggested_key": {
+        "default": "Ctrl+T",
+        "mac": "Command+T"
+      },
+      "description": "Translate selected text"
+    },
+    "search-action": {
+      "suggested_key": {
+        "default": "Ctrl+S",
+        "mac": "Command+S"
+      },
+      "description": "Search selected text"
+    },
+    "share-action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Share selected text"
+    }
   }
 }
