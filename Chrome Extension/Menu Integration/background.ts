@@ -47,7 +47,11 @@ function shareOnPlatform(text: string, platform: string): void {
   }
 }
 
-chrome.runtime.onMessage.addListener(function (request: { action: string; text: string; platform?: string }, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (
+  request: { action: string; text: string; platform?: string },
+  sender,
+  sendResponse
+) {
   const { action, text, platform } = request;
 
   if (action === 'translate') {
@@ -66,3 +70,11 @@ chrome.runtime.onMessage.addListener(function (request: { action: string; text: 
     }
   }
 });
+
+chrome.commands.onCommand.addListener(function (command) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    const activeTab = tabs[0];
+    chrome.tabs.sendMessage(activeTab.id!, { action: command });
+  });
+});
+
