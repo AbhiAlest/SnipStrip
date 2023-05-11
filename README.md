@@ -5,6 +5,5 @@ Chrome extension that allows you to copy text inside of an image, YouTube video 
 </p>
 <br />  
 
-
 ---
 
