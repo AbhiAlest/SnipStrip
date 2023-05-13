@@ -1,5 +1,7 @@
 import * as Sentry from '@sentry/browser';
 
+
+
 interface TextHistoryEntry {
   id: string;
   text: string;
