@@ -32,7 +32,7 @@ If you're new to open-source contributions, don't worry! We're here to help you 
 
 
 
-##Code Style and Guidelines
+## Code Style and Guidelines
 
 To ensure consistency and maintainability, we follow a set of code style and guidelines in this project. Please review the guidelines in the repository's README file before making any changes.
 
