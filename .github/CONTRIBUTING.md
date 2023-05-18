@@ -23,8 +23,8 @@ If you're new to open-source contributions, don't worry! We're here to help you 
 6. **Commit and Push**: Once you're satisfied with your changes, commit them to your local Git repository and push them to your forked repository on GitHub.
    ```shell
    git add .
-    git commit -m "Your commit message"
-    git push origin main
+   git commit -m "Your commit message"
+   git push origin main
    ```
 7. **Create a Pull Request**: Open a pull request (PR) on the original repository. Provide a clear description of the changes you made and any additional information that may be helpful for the reviewers. I will review your contribution and provide feedback.  
  
