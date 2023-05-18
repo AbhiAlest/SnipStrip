@@ -24,7 +24,7 @@
       "48": "icon48.png",
       "128": "icon128.png"
     },
-    "default_popup": "settings.html"
+    "default_popup": "settings.tsx"
   },
   "commands": {
     "translate-action": {
