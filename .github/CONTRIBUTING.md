@@ -36,10 +36,10 @@ If you're new to open-source contributions, don't worry! We're here to help you 
 
 To ensure consistency and maintainability, we follow a set of code style and guidelines in this project. Please review the guidelines in the repository's README file before making any changes.
 
-**Reporting Issues: **
+**Reporting Issues:**
 If you encounter any bugs, issues, or have suggestions for improvements, please [create an issue](https://github.com/AbhiAlest/SnipStrip/issues) in the repository. Provide detailed information about the problem or suggestion so that we can better understand and address it.
 
-**Community and Support: **
+**Community and Support:**
 We encourage you to join our community and connect with other contributors. Feel free to ask questions, share your ideas, and help others in our community forums. If you need assistance or have any questions, you can reach out to me directly. 
 
 We appreciate your interest in contributing to SnipStrip and look forward to your valuable contributions!
